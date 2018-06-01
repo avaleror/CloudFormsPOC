@@ -1,5 +1,6 @@
 #
 # Description: Create configured host record in Foreman, with 2nd adapter
+# This is ncatling method
 #
 
 @method = 'register_foreman'
