@@ -1,0 +1,43 @@
+---
+- MiqPolicySet:
+    name: d319e531-5935-4d5b-9c5d-90f5b1b27a82
+    description: 'VM and Instance Analysis: Post Provisioning'
+    set_type: MiqPolicySet
+    guid: d319e531-5935-4d5b-9c5d-90f5b1b27a82
+    read_only: 
+    set_data: 
+    mode: control
+    owner_type: 
+    owner_id: 
+    userid: 
+    group_id: 
+    MiqPolicy:
+    - name: 6e610024-c3e5-4c73-8ddb-7649685e64d4
+      description: 'Analysis: Post Provisioning'
+      expression: 
+      towhat: Vm
+      guid: 6e610024-c3e5-4c73-8ddb-7649685e64d4
+      created_by: admin
+      updated_by: admin
+      notes: VM and Instance Smart State Analysis after provisioning
+      active: true
+      mode: control
+      read_only: 
+      MiqPolicyContent:
+      - qualifier: success
+        success_sequence: 1
+        MiqEventDefinition:
+          name: vm_provisioned
+          description: VM Provision Complete
+          guid: 5e51be26-458b-45e2-bb77-dbc11e3d9e61
+          event_type: Default
+          definition: 
+          default: 
+          enabled: 
+        MiqAction:
+          name: vm_analyze
+          description: Initiate SmartState Analysis for VM
+          guid: f0b4753b-8328-49a6-982b-45f769f626a5
+          action_type: default
+          options: {}
+      Condition: []
