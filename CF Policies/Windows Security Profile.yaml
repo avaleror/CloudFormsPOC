@@ -1,0 +1,168 @@
+---
+- MiqPolicySet:
+    name: 59b2e1b6-a7e9-4812-a157-4e8bf4b7b67d
+    description: Windows Security Profile
+    set_type: MiqPolicySet
+    guid: 59b2e1b6-a7e9-4812-a157-4e8bf4b7b67d
+    read_only: 
+    set_data: 
+    mode: control
+    owner_type: 
+    owner_id: 
+    userid: 
+    group_id: 
+    MiqPolicy:
+    - name: b5c99a10-9255-11e7-a7fb-2cc2605856f4
+      description: Run SmartSate
+      expression: 
+      towhat: Vm
+      guid: b5c99a10-9255-11e7-a7fb-2cc2605856f4
+      created_by: demo
+      updated_by: demo
+      notes: 
+      active: true
+      mode: control
+      read_only: 
+      MiqPolicyContent:
+      - qualifier: success
+        success_sequence: 1
+        MiqEventDefinition:
+          name: vm_start
+          description: VM Power On
+          guid: ab63fca8-dd94-11e6-8457-2cc2605deca5
+          event_type: Default
+          definition: 
+          default: 
+          enabled: 
+        MiqAction:
+          name: vm_analyze
+          description: Initiate SmartState Analysis for VM
+          guid: a9ec4fba-dd94-11e6-8457-2cc2605deca5
+          action_type: default
+          options: {}
+      - qualifier: success
+        success_sequence: 1
+        MiqEventDefinition:
+          name: vm_reset
+          description: VM Reset
+          guid: ab70737a-dd94-11e6-8457-2cc2605deca5
+          event_type: Default
+          definition: 
+          default: 
+          enabled: 
+        MiqAction:
+          name: vm_analyze
+          description: Initiate SmartState Analysis for VM
+          guid: a9ec4fba-dd94-11e6-8457-2cc2605deca5
+          action_type: default
+          options: {}
+      Condition: []
+    - name: 4c0e0048-e0ac-11e7-a284-2cc2605c21bc
+      description: Check Compliance
+      expression: 
+      towhat: Vm
+      guid: 4c0e0048-e0ac-11e7-a284-2cc2605c21bc
+      created_by: admin
+      updated_by: admin
+      notes: 
+      active: true
+      mode: control
+      read_only: 
+      MiqPolicyContent:
+      - qualifier: success
+        success_sequence: 1
+        MiqEventDefinition:
+          name: vm_scan_complete
+          description: VM Analysis Complete
+          guid: abc6272a-dd94-11e6-8457-2cc2605deca5
+          event_type: Default
+          definition: 
+          default: 
+          enabled: 
+        MiqAction:
+          name: check_compliance
+          description: Check Host or VM Compliance
+          guid: a9ffc626-dd94-11e6-8457-2cc2605deca5
+          action_type: default
+          options: {}
+      Condition: []
+    - name: 2cddf974-2d20-4a3c-9b81-650e6ea191df
+      description: Windows Firewall Check
+      expression: 
+      towhat: Vm
+      guid: 2cddf974-2d20-4a3c-9b81-650e6ea191df
+      created_by: admin
+      updated_by: admin
+      notes: 
+      active: true
+      mode: compliance
+      read_only: 
+      MiqPolicyContent:
+      - qualifier: failure
+        failure_sequence: 1
+        failure_synchronous: true
+        MiqEventDefinition:
+          name: vm_compliance_check
+          description: VM Compliance Check
+          guid: 42b1bd96-317e-11e3-88e1-005056b80000
+          event_type: Default
+          definition: 
+          default: 
+          enabled: 
+        MiqAction:
+          name: compliance_failed
+          description: Mark as Non-Compliant
+          guid: 339f0cc8-317e-11e3-88e1-005056b80000
+          action_type: default
+          options: {}
+      Condition:
+      - name: 1eb04b21-7a3e-4c61-aee5-cf662b6d103b
+        description: Registry Firewall Key Enabled Public Networks
+        modifier: allow
+        expression: !ruby/object:MiqExpression
+          exp:
+            "=":
+              regkey: HKLM\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\PublicProfile
+              regval: EnableFirewall
+              value: '1'
+          context_type: 
+        towhat: Vm
+        file_mtime: 
+        guid: 1eb04b21-7a3e-4c61-aee5-cf662b6d103b
+        filename: 
+        applies_to_exp: !ruby/object:MiqExpression
+          exp:
+            INCLUDES:
+              field: Vm-os_image_name
+              value: ''
+          context_type: 
+        miq_policy_id: 
+        notes: 'Checking for HKLM\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\PublicProfile
+          : EnableFirewall = ''1'' in register for knowing if Firewall is enabled
+          for Public Networks'
+        read_only: 
+      - name: d28ba0c3-f379-4139-a39d-cb8a4391a011
+        description: Registry Firewall Key Enabled Private Network
+        modifier: allow
+        expression: !ruby/object:MiqExpression
+          exp:
+            "=":
+              regkey: HKLM\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\StandardProfile
+              regval: EnableFirewall
+              value: '1'
+          context_type: 
+        towhat: Vm
+        file_mtime: 
+        guid: d28ba0c3-f379-4139-a39d-cb8a4391a011
+        filename: 
+        applies_to_exp: !ruby/object:MiqExpression
+          exp:
+            INCLUDES:
+              field: Vm-os_image_name
+              value: window
+          context_type: 
+        miq_policy_id: 
+        notes: Checking HKLM\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\StandardProfile:EnableFirewall
+          registry key value in order to know if Firewall is Enabled in a Windows
+          Machine
+        read_only: 
